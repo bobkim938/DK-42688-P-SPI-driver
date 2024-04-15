@@ -1,0 +1,75 @@
+#ifndef DK42688_SPI_H
+#define DK42688_SPI_H
+
+#include "register.h"
+#include "esp_err.h"
+#include "driver/spi_master.h"
+#include "esp_log.h"
+#include <driver/gpio.h>
+#include "esp_system.h"
+
+static const char *TAG = "DK42688 SPI Driver";
+
+typedef struct {
+    int miso;
+    int mosi;
+    int sclk;
+    int cs;
+} DK42688_SPI_Config;
+
+class DK42688_SPI {
+    public:
+        DK42688_SPI(const spi_host_device_t spi_peripheral, DK42688_SPI_Config *spi_config);
+        void begin();
+
+        enum GyroFS : uint8_t {
+            dps2000 = 0x00,
+            dps1000 = 0x01,
+            dps500 = 0x02,
+            dps250 = 0x03,
+            dps125 = 0x04,
+            dps62_5 = 0x05,
+            dps31_25 = 0x06,
+            dps15_625 = 0x07
+        };
+        enum AccelFS : uint8_t {
+            gpm16 = 0x00,
+            gpm8 = 0x01,
+            gpm4 = 0x02,
+            gpm2 = 0x03
+        };
+        enum ODR : uint8_t {
+            odr32k = 0x01, // LN mode
+            odr16k = 0x02, // LN mode
+            odr8k = 0x03, // LN mode
+            odr4k = 0x04, // LN mode
+            odr2k = 0x05, // LN mode
+            odr1k = 0x06, // LN mode
+            odr200 = 0x07, // LP, LN mode
+            odr100 = 0x08, // LP, LN mode
+            odr50 = 0x09, // LP, LN mode
+            odr25 = 0x0A, // LP, LN mode
+            odr12a5 = 0x0B, // LP, LN mode
+            odr6a25 = 0x0C, // LP mode
+            odr3a125 = 0x0D, // LP mode 
+            odr1a5625 = 0x0E, // LP mode
+            odr500 = 0x0F, // LP, LN mode
+        };
+
+    private:
+        // SPI configuration parameters
+        spi_bus_config_t _spi_bus_cfg{};
+        spi_device_interface_config_t _spi_interface_cfg{};
+        spi_device_handle_t _handle{};
+        spi_host_device_t host{};
+        spi_transaction_t transaction = {}; // define parameters for a single SPI transfer
+        
+        // SPI functions
+        esp_err_t transferByte(const uint8_t reg_addr, const uint8_t data, bool readWrite);
+        uint8_t ReadRegister(const uint8_t reg_addr);
+        esp_err_t WriteRegister(const uint8_t reg_addr, const uint8_t reg_data);
+        esp_err_t who_am_i();
+};
+
+
+#endif // DK42688_SPI_H

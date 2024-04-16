@@ -422,3 +422,8 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/Users/kimminjoong/Desktop/Project/HKTV_AGV/SPI_DK42688P/build/esp-idf/main/cmake_install.cmake")
 endif()
 
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/Users/kimminjoong/Desktop/Project/HKTV_AGV/SPI_DK42688P/build/esp-idf/DK42688_SPI/cmake_install.cmake")
+endif()
+

@@ -43,11 +43,13 @@ esp_err_t DK42688_SPI::begin() {
     ret = spi_bus_add_device(SPI2_HOST, &devcfg, &handle);
     if(ret != ESP_OK) return ret;
     ret = reset();
-    if(ret != ESP_OK) return ret;
+    vTaskDelay(10);
     ret = who_am_i();
     if(ret != ESP_OK) return ret;
     ret = write_spi(ICM42688reg::PWR_MGMT0, 0x0f, 2); // turn on gyro and accel sensors in LN mode
     if(ret != ESP_OK) return ret;
+    ret = read_spi(ICM42688reg::PWR_MGMT0);
+    printf("Received data: 0x%02X\n", recvbuf[0]);
     return ret;
 }
 
@@ -62,3 +64,66 @@ esp_err_t DK42688_SPI::who_am_i() {
     assert(recvbuf[0] == 0x47);
     return ret;
 }
+
+double DK42688_SPI::get_accel_x() {
+    read_spi(ICM42688reg::ACCEL_DATA_X0);
+    int16_t accel_data_x0 = recvbuf[0];
+    read_spi(ICM42688reg::ACCEL_DATA_X1);
+    int16_t accel_data_x1 = recvbuf[0];
+    int16_t accel_x_raw = (accel_data_x1 << 8) | accel_data_x0;
+    double acc_x = (accel_x_raw * 16/32768.0) * 9.81;
+    return acc_x;
+}
+
+double DK42688_SPI::get_accel_y() {
+    read_spi(ICM42688reg::ACCEL_DATA_Y0);
+    int16_t accel_data_y0 = recvbuf[0];
+    read_spi(ICM42688reg::ACCEL_DATA_Y1);
+    int16_t accel_data_y1 = recvbuf[0];
+    int16_t accel_y_raw = (accel_data_y1 << 8) | accel_data_y0;
+    double acc_y = (accel_y_raw * 16/32768.0) * 9.81;
+    return acc_y;
+}
+
+double DK42688_SPI::get_accel_z() {
+    read_spi(ICM42688reg::ACCEL_DATA_Z0);
+    int16_t accel_data_z0 = recvbuf[0];
+    read_spi(ICM42688reg::ACCEL_DATA_Z1);
+    int16_t accel_data_z1 = recvbuf[0];
+    int16_t accel_z_raw = (accel_data_z1 << 8) | accel_data_z0;
+    double acc_z = (accel_z_raw * 16/32768.0) * 9.81;
+    return acc_z;
+}
+
+double DK42688_SPI::get_gyro_x() {
+    read_spi(ICM42688reg::GYRO_DATA_X0);
+    int16_t gyro_data_x0 = recvbuf[0];  
+    read_spi(ICM42688reg::GYRO_DATA_X1);
+    int16_t gyro_data_x1 = recvbuf[0];  
+    int16_t gyro_x_raw = (gyro_data_x1 << 8) | gyro_data_x0;  
+    double gyro_x = gyro_x_raw * (2000.0 / 32768.0);  
+    return gyro_x;
+}
+
+double DK42688_SPI::get_gyro_y() {
+    read_spi(ICM42688reg::GYRO_DATA_Y0);
+    int16_t gyro_data_y0 = recvbuf[0];  
+    read_spi(ICM42688reg::GYRO_DATA_Y1);
+    int16_t gyro_data_y1 = recvbuf[0];  
+    int16_t gyro_y_raw = (gyro_data_y1 << 8) | gyro_data_y0;  
+    double gyro_y = gyro_y_raw * (2000.0 / 32768.0);  
+    return gyro_y;
+}
+
+double DK42688_SPI::get_gyro_z() {
+    read_spi(ICM42688reg::GYRO_DATA_Z0);
+    int16_t gyro_data_z0 = recvbuf[0]; 
+    read_spi(ICM42688reg::GYRO_DATA_Z1);
+    int16_t gyro_data_z1 = recvbuf[0]; 
+    int16_t gyro_z_raw = (gyro_data_z1 << 8) | gyro_data_z0;  
+    double gyro_z = gyro_z_raw * (2000.0 / 32768.0);  
+    return gyro_z;
+}
+
+
+

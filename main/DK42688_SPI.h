@@ -21,8 +21,13 @@ class DK42688_SPI {
     public:
         DK42688_SPI(DK42688_SPI_Config *spi_config);
         esp_err_t begin();
-        esp_err_t who_am_i();
         esp_err_t reset();
+        double get_accel_x();
+        double get_accel_y();
+        double get_accel_z();
+        double get_gyro_x();
+        double get_gyro_y();
+        double get_gyro_z();
 
         enum GyroFS : uint8_t {
             dps2000 = 0x00,
@@ -69,6 +74,7 @@ class DK42688_SPI {
         
         esp_err_t read_spi(uint8_t reg);
         esp_err_t write_spi(uint8_t reg, uint8_t data, uint8_t len);
+        esp_err_t who_am_i();
 };
 
 

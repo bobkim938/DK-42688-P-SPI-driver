@@ -16,6 +16,7 @@
     "idf.toolsPath": "/Users/kimminjoong/.espressif",
     "idf.flashType": "UART",
     "files.associations": {
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "cstdint": "cpp"
     }
 }

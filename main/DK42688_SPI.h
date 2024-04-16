@@ -19,8 +19,9 @@ typedef struct {
 
 class DK42688_SPI {
     public:
-        DK42688_SPI(const spi_host_device_t spi_peripheral, DK42688_SPI_Config *spi_config);
-        void begin();
+        DK42688_SPI(DK42688_SPI_Config *spi_config);
+        esp_err_t begin();
+        void test();
 
         enum GyroFS : uint8_t {
             dps2000 = 0x00,
@@ -57,18 +58,15 @@ class DK42688_SPI {
         };
 
     private:
-        // SPI configuration parameters
-        spi_bus_config_t _spi_bus_cfg{};
-        spi_device_interface_config_t _spi_interface_cfg{};
-        spi_device_handle_t _handle{};
-        spi_host_device_t host{};
-        spi_transaction_t transaction = {}; // define parameters for a single SPI transfer
-        
-        // SPI functions
-        esp_err_t transferByte(const uint8_t reg_addr, const uint8_t data, bool readWrite);
-        uint8_t ReadRegister(const uint8_t reg_addr);
-        esp_err_t WriteRegister(const uint8_t reg_addr, const uint8_t reg_data);
-        esp_err_t who_am_i();
+        esp_err_t ret;
+        spi_device_handle_t handle;
+        spi_bus_config_t buscfg = {};
+        spi_device_interface_config_t devcfg = {};
+        spi_transaction_t t = {};
+        char sendbuf[128] = {};
+        char recvbuf[128] = {};
+
+
 };
 
 

@@ -22,6 +22,10 @@ extern "C" void app_main(void)
 {   
     DK42688_SPI spi(&spi_config);
     spi.begin();
+    spi.set_accel_fsr(AccelFSR::g16);
+    spi.set_accODR(ODR::odr1k);
+    spi.set_gyro_fsr(GyroFSR::dps2000);
+    spi.set_gyroODR(ODR::odr1k);
     while(1) {
         double ax = spi.get_accel_x();
         double ay = spi.get_accel_y();

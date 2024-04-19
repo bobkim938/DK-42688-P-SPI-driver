@@ -6,8 +6,8 @@
 
 using namespace std;
 
-#define MOSI GPIO_NUM_11
-#define MISO GPIO_NUM_13
+#define MOSI GPIO_NUM_11 //SDI
+#define MISO GPIO_NUM_13 //SDO
 #define SCLK GPIO_NUM_12
 #define CS GPIO_NUM_10
 
@@ -26,6 +26,7 @@ extern "C" void app_main(void)
     spi.set_accODR(ODR::odr1k);
     spi.set_gyro_fsr(GyroFSR::dps2000);
     spi.set_gyroODR(ODR::odr1k);
+    cout << "Setup complete" << endl;
     while(1) {
         double ax = spi.get_accel_x();
         double ay = spi.get_accel_y();

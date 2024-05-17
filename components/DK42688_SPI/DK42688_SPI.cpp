@@ -19,7 +19,7 @@ DK42688_SPI::DK42688_SPI(DK42688_SPI_Config *spi_config) {
 }   
 
 esp_err_t DK42688_SPI::read_spi(uint8_t reg) {
-    t.length = 16;
+    t.length = 8;
     t.cmd = reg | 0x80;
     t.tx_buffer = 0;
     t.rx_buffer = recvbuf;
@@ -46,7 +46,6 @@ esp_err_t DK42688_SPI::begin() {
     if(ret != ESP_OK) return ret;
     ret = write_spi(ICM42688reg::PWR_MGMT0, 0x0f, 2); // turn on gyro and accel sensors in LN mode
     if(ret != ESP_OK) return ret;
-    vTaskDelay(5);
     ret = read_spi(ICM42688reg::PWR_MGMT0);
     // printf("Received data: 0x%02X\n", recvbuf[0]);
     return ret;
@@ -59,8 +58,8 @@ esp_err_t DK42688_SPI::reset() {
 
 esp_err_t DK42688_SPI::who_am_i() {
     ret = read_spi(ICM42688reg::WHO_AM_I);
-    // printf("Received data: 0x%02X\n", recvbuf[0]);
-    assert(recvbuf[0] == 0x47);
+    printf("Received data: 0x%02X\n", recvbuf[0]);
+    // assert(recvbuf[0] == 0x47);
     return ret;
 }
 
@@ -117,8 +116,8 @@ esp_err_t DK42688_SPI::set_accel_fsr(AccelFSR fsr) {
             accel_fsr = 2.0;
             break;
     }
-    // read_spi(ICM42688reg::ACCEL_CONFIG0);
-    // printf("Received data: 0x%02X\n", recvbuf[0]);
+    read_spi(ICM42688reg::ACCEL_CONFIG0);
+    printf("Received data: 0x%02X\n", recvbuf[0]);
     return ret;
 }
 
@@ -126,8 +125,8 @@ esp_err_t DK42688_SPI::set_accODR(ODR odr) {
     read_spi(ICM42688reg::ACCEL_CONFIG0);
     uint8_t reg = (recvbuf[0] & 0xF0) | odr;
     ret = write_spi(ICM42688reg::ACCEL_CONFIG0, reg, 2);
-    // read_spi(ICM42688reg::ACCEL_CONFIG0);
-    // printf("Received data: 0x%02X\n", recvbuf[0]);
+    read_spi(ICM42688reg::ACCEL_CONFIG0);
+    printf("Received data: 0x%02X\n", recvbuf[0]);
     return ret;
 }
 
@@ -135,8 +134,8 @@ esp_err_t DK42688_SPI::set_gyroODR(ODR odr) {
     read_spi(ICM42688reg::GYRO_CONFIG0);
     uint8_t reg = (recvbuf[0] & 0xF0) | odr;
     ret = write_spi(ICM42688reg::GYRO_CONFIG0, reg, 2);
-    // read_spi(ICM42688reg::GYRO_CONFIG0);
-    // printf("Received data: 0x%02X\n", recvbuf[0]);
+    read_spi(ICM42688reg::GYRO_CONFIG0);
+    printf("Received data: 0x%02X\n", recvbuf[0]);
     return ret;
 }
 

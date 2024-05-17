@@ -22,25 +22,26 @@ extern "C" void app_main(void)
 {   
     DK42688_SPI spi(&spi_config);
     spi.begin();
-    spi.set_accel_fsr(AccelFSR::g16);
-    spi.set_accODR(ODR::odr1k);
-    spi.set_gyro_fsr(GyroFSR::dps2000);
-    spi.set_gyroODR(ODR::odr1k);
+    // spi.reset();
+    // spi.set_accel_fsr(AccelFSR::g16);
+    // spi.set_accODR(ODR::odr1k);
+    // spi.set_gyro_fsr(GyroFSR::dps2000);
+    // spi.set_gyroODR(ODR::odr1k);
     cout << "Setup complete" << endl;
-    while(1) {
-        double ax = spi.get_accel_x();
-        double ay = spi.get_accel_y();
-        double az = spi.get_accel_z();
-        cout << "Accel X: " << ax << endl;
-        cout << "Accel Y: " << ay << endl;
-        cout << "Accel Z: " << az << endl;
-        double gx = spi.get_gyro_x();
-        double gy = spi.get_gyro_y();
-        double gz = spi.get_gyro_z();
-        cout << "Gyro X: " << gx << endl;
-        cout << "Gyro Y: " << gy << endl;
-        cout << "Gyro Z: " << gz << endl;
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-    }
+    // while(1) {
+    //     double ax = spi.get_accel_x();
+    //     double ay = spi.get_accel_y();
+    //     double az = spi.get_accel_z();
+    //     cout << "Accel X: " << ax << endl;
+    //     cout << "Accel Y: " << ay << endl;
+    //     cout << "Accel Z: " << az << endl;
+    //     double gx = spi.get_gyro_x();
+    //     double gy = spi.get_gyro_y();
+    //     double gz = spi.get_gyro_z();
+    //     cout << "Gyro X: " << gx << endl;
+    //     cout << "Gyro Y: " << gy << endl;
+    //     cout << "Gyro Z: " << gz << endl;
+    //     vTaskDelay(1000 / portTICK_PERIOD_MS);
+    // }
 }   
 
